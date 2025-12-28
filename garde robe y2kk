@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="https://picsum.photos/32/32" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Garde-Robe Y2K - Fashion Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Fredoka:wght@300;400;600;700&family=VT323&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              y2k: {
+                pink: '#ff007f',
+                hot: '#ff1493',
+                light: '#ffc2d6',
+                purple: '#b19cd9',
+                blue: '#89CFF0',
+                lime: '#ccff00',
+              }
+            },
+            fontFamily: {
+              'pixel': ['"Press Start 2P"', 'cursive'],
+              'bubble': ['"Fredoka"', 'sans-serif'],
+              'mono': ['"VT323"', 'monospace'],
+            },
+            animation: {
+              'bounce-slow': 'bounce 3s infinite',
+              'sparkle': 'sparkle 1s infinite linear',
+              'float': 'float 6s ease-in-out infinite',
+              'float-fast': 'float 4s ease-in-out infinite',
+              'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'spin-slow': 'spin 8s linear infinite',
+            },
+            keyframes: {
+              sparkle: {
+                '0%': { transform: 'scale(0.8) rotate(0deg)', opacity: '0.5' },
+                '50%': { transform: 'scale(1.2) rotate(180deg)', opacity: '1' },
+                '100%': { transform: 'scale(0.8) rotate(360deg)', opacity: '0.5' },
+              },
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-15px)' },
+              }
+            },
+            backgroundImage: {
+              'glitter': 'url("data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' viewBox=\'0 0 40 40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.6\' fill-rule=\'evenodd\'%3E%3Cpath d=\'M20 0 L22 15 L35 20 L22 25 L20 40 L18 25 L5 20 L18 15 Z\'/%3E%3C/g%3E%3C/svg%3E")',
+              'y2k-gradient': 'linear-gradient(135deg, #ffc2d6 0%, #e0c3fc 50%, #8ec5fc 100%)',
+              'checkerboard': 'repeating-linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee), repeating-linear-gradient(45deg, #eee 25%, #fff 25%, #fff 75%, #eee 75%, #eee)',
+            }
+          },
+        },
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.32.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.556.0"
+  }
+}
+</script>
+<style>
+  body {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewport="0 0 24 24" fill="black" stroke="white" stroke-width="2"><path d="M5.5 3.21l10.8 5.62-5.02 1.76-1.76 5.02L3.21 5.5l2.29-2.29z"/></svg>'), auto;
+    background-image: 
+      radial-gradient(circle at 10% 20%, rgba(255, 182, 193, 0.4) 0%, transparent 20%),
+      radial-gradient(circle at 90% 80%, rgba(137, 207, 240, 0.4) 0%, transparent 20%);
+  }
+  
+  /* Style "Gel" / Aqua Button (Mac OS X / WinXP style) */
+  .btn-aqua {
+    background: linear-gradient(to bottom, #ffebf0 0%, #ffc2d6 49%, #ff69b4 50%, #ff1493 100%);
+    border: 2px solid #fff;
+    border-radius: 999px;
+    box-shadow: 
+      0 4px 6px rgba(0,0,0,0.2), 
+      inset 0 1px 0 rgba(255,255,255,0.6),
+      0 0 0 2px rgba(255,105,180,0.3); /* Outline ring */
+    color: white;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.1s, filter 0.1s;
+  }
+  
+  .btn-aqua::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 45%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.2) 100%);
+    border-radius: 999px 999px 20px 20px;
+    pointer-events: none;
+  }
+
+  .btn-aqua:hover {
+    filter: brightness(1.1);
+    transform: scale(1.05);
+  }
+  
+  .btn-aqua:active {
+    transform: scale(0.95);
+    filter: brightness(0.9);
+  }
+
+  .btn-aqua-blue {
+    background: linear-gradient(to bottom, #e0f7fa 0%, #b2ebf2 49%, #00bcd4 50%, #0097a7 100%);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.6), 0 0 0 2px rgba(0,188,212,0.3);
+  }
+
+  /* Glass Panel Y2K */
+  .glass-y2k {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(12px);
+    border: 3px solid #fff;
+    box-shadow: 
+      8px 8px 0px rgba(255, 182, 193, 0.5), 
+      inset 0 0 20px rgba(255, 255, 255, 0.8);
+    border-radius: 24px;
+  }
+
+  /* Pixel Text Shadow */
+  .text-bling {
+    text-shadow: 2px 2px 0px #fff, 3px 3px 0px rgba(0,0,0,0.1);
+  }
+  
+  .text-outline {
+    -webkit-text-stroke: 1px white;
+    text-shadow: 2px 2px 0px #ff1493;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 16px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #ffe6ea;
+    border-left: 2px solid #ffb6c1;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #ff69b4;
+    border: 3px solid #ffe6ea;
+    border-radius: 8px;
+    box-shadow: inset -2px -2px 0 rgba(0,0,0,0.1);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #ff1493;
+  }
+
+  /* Animations */
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  .animate-blink {
+    animation: blink 1s step-end infinite;
+  }
+</style>
+</head>
+  <body class="bg-y2k-gradient min-h-screen text-slate-800 font-bubble antialiased selection:bg-pink-300 selection:text-white overflow-x-hidden">
+    <!-- Star Background Pattern (Fixed) -->
+    <div class="fixed inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 pointer-events-none z-0"></div>
+    <div id="root" class="relative z-10"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
